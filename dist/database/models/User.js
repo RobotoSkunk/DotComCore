@@ -23,7 +23,29 @@
     SOFTWARE.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Database = void 0;
-const connection_1 = require("./connection");
-Object.defineProperty(exports, "Database", { enumerable: true, get: function () { return connection_1.Database; } });
-//# sourceMappingURL=index.js.map
+exports.User = void 0;
+/**
+ * Represents an user account.
+ */
+class User {
+    id;
+    hash;
+    name;
+    handler;
+    birthdate;
+    roles;
+    static _database;
+    constructor(data) {
+        this.id = data.id;
+        this.hash = data.hash;
+        this.name = data.name;
+        this.handler = data.handler;
+        this.birthdate = data.birthdate;
+        this.roles = data.roles;
+    }
+    static async SetDatabase(database) {
+        User._database = database;
+    }
+}
+exports.User = User;
+//# sourceMappingURL=User.js.map

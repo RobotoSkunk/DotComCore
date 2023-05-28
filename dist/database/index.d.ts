@@ -1,1 +1,2 @@
-import 'pg';
+import { Database } from "./connection";
+export { Database };

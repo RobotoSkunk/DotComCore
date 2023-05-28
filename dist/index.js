@@ -23,9 +23,29 @@
     SOFTWARE.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
+const database_1 = require("./database");
+const RSEngine_1 = require("./RSEngine");
 class DotComCore {
-    constructor() {
-        console.log('DotComCore constructor');
+    static _options;
+    static _database;
+    static Config(options) {
+        this._options = options;
+        this._database = new database_1.Database(this._options.database.host, this._options.database.database, this._options.database.user, this._options.database.password, this._options.database.port);
+    }
+    static get hmacSecret() {
+        return this._options.hmacSecret;
+    }
+    static get hmacSalt() {
+        return this._options.hmacSalt;
+    }
+    static get encryptionKey() {
+        return this._options.encryptionKey;
+    }
+    static async Connect() {
+        return await this._database.Connect();
+    }
+    static async HMAC(data) {
+        return RSEngine_1.RSCrypto.HMAC(data, DotComCore.hmacSecret);
     }
 }
 exports.default = DotComCore;

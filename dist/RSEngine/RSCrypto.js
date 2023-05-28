@@ -29,6 +29,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RSCrypto = void 0;
 const crypto_1 = __importDefault(require("crypto"));
 class RSCrypto {
+    /**
+     * The algorithm to use for hashing.
+     */
     static algo = 'sha256';
     /**
      * Hashes a string using SHA256.

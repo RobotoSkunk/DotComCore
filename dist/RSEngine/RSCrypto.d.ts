@@ -1,5 +1,8 @@
 export declare class RSCrypto {
-    static algo: string;
+    /**
+     * The algorithm to use for hashing.
+     */
+    private static readonly algo;
     /**
      * Hashes a string using SHA256.
      * @param data The string to hash.
