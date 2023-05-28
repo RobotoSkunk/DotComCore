@@ -1,0 +1,39 @@
+{
+	"name": "dotcom-core",
+	"version": "0.1.0",
+	"description": "The main core of robotoskunk.com",
+	"main": "dist/index.js",
+	"scripts": {
+		"test": "node dist/tests/index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/RobotoSkunk/dotcom-core.git"
+	},
+	"keywords": [
+		"website-core",
+		"core",
+		"website",
+		"webapp",
+		"database",
+		"mailer",
+		"postgresql",
+		"postgres",
+		"nodemailer"
+	],
+	"author": "RobotoSkunk",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/RobotoSkunk/dotcom-core/issues"
+	},
+	"homepage": "https://github.com/RobotoSkunk/dotcom-core#readme",
+	"devDependencies": {
+		"@types/node": "^20.2.5",
+		"@types/nodemailer": "^6.4.8",
+		"@types/pg": "^8.10.1"
+	},
+	"dependencies": {
+		"nodemailer": "^6.9.2",
+		"pg": "^8.11.0"
+	}
+}

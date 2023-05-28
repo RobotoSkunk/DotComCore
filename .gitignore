@@ -1,0 +1,17 @@
+# Typical Node.JS stuff
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+
+# Mac, Windows and Linux file system files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Visual Studio Code files
+.vscode/
