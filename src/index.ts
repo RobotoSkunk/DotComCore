@@ -23,7 +23,9 @@
 */
 
 
+import { PoolClient } from "pg";
 import { Database } from "./database";
+import { RSCrypto } from "./RSEngine";
 
 export interface DotComCoreOptions
 {
@@ -33,15 +35,18 @@ export interface DotComCoreOptions
 		user: string;
 		password: string;
 		port: number;
-	}
+	};
+	hmacSecret: string;
+	hmacSalt: string;
+	encryptionKey: string;
 }
 
 class DotComCore
 {
-	private _options: DotComCoreOptions;
-	private readonly _database: Database;
+	private static _options: DotComCoreOptions;
+	private static _database: Database;
 
-	constructor(options: DotComCoreOptions)
+	public static Config(options: DotComCoreOptions)
 	{
 		this._options = options;
 
@@ -52,6 +57,31 @@ class DotComCore
 			this._options.database.password,
 			this._options.database.port
 		);
+	}
+
+	public static get hmacSecret(): string
+	{
+		return this._options.hmacSecret;
+	}
+
+	public static get hmacSalt(): string
+	{
+		return this._options.hmacSalt;
+	}
+
+	public static get encryptionKey(): string
+	{
+		return this._options.encryptionKey;
+	}
+
+	public static async Connect(): Promise<PoolClient>
+	{
+		return await this._database.Connect();
+	}
+
+	public static async HMAC(data: string): Promise<string>
+	{
+		return RSCrypto.HMAC(data, DotComCore.hmacSecret);
 	}
 }
 

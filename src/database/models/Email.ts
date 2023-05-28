@@ -23,6 +23,14 @@
 */
 
 
+import DotComCore from '../..';
+import path from 'path';
+import { RSFiles } from '../../RSEngine';
+
+import { MxRecord } from 'dns';
+import dns from 'dns/promises';
+
+
 export interface IEmail
 {
 	id: string;
@@ -56,6 +64,9 @@ export class Email implements IEmail
 	public createdAt: Date;
 	public isFake: boolean;
 
+	public static readonly regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+
 	constructor(email: IEmail)
 	{
 		this.id = email.id;
@@ -67,6 +78,215 @@ export class Email implements IEmail
 		this.createdAt = email.createdAt;
 		this.isFake = email.isFake;
 	}
+
+
+	// #region Static methods
+
+	/**
+	 * Converts a SQL query result to an email address.
+	 * @param queryData The SQL query result.
+	 * @returns	The email address.
+	 */
+	private static _SQL2Email(queryData: any): Email
+	{
+		return new Email({
+			id: queryData.id,
+			hash: queryData.hash,
+			email: queryData.email,
+			userId: queryData.usrid,
+			type: queryData.refer,
+			verified: queryData.verified,
+			createdAt: queryData.created_at,
+			isFake: queryData.is_fake
+		});
+	}
+
+	/**
+	 * Hashes an email address using _HMAC.
+	 * @param email The email address.
+	 * @returns The hashed email address.
+	 */
+	private static async _HMAC(email: string): Promise<string>
+	{
+		return DotComCore.HMAC(email.toLowerCase() + DotComCore.hmacSalt);
+	}
+
+	/**
+	 * Creates a new email address.
+	 * @param email The email address.
+	 * @param userId The user id.
+	 * @param type The email type.
+	 * @param isFake Indicates if the email address is fake.
+	 * @returns The email id, or null if the email address already exists.
+	 */
+	// private static async _Set(email: string, userId: string, type: Email.Type, isFake: boolean): Promise<string>
+	// {
+	// 	const client = await DotComCore.Connect();
+
+	// 	try {
+
+	// 	} catch (e) {
+	// 		throw e;
+	// 	} finally {
+	// 		client.release();
+	// 	}
+	// }
+
+
+
+	/**
+	 * Gets an email address by its id.
+	 * @param id The email id.
+	 * @returns The email address, or null if not found.
+	 */
+	public static async GetById(id: string): Promise<Email | null>
+	{
+		const client = await DotComCore.Connect();
+
+		try {
+			const query = await client.query(`SELECT * FROM emails WHERE id = $1`, [ id ]);
+
+			if (query.rowCount === 0) {
+				return null;
+			}
+
+			return Email._SQL2Email(query.rows[0]);
+		} catch (e) {
+			throw e;
+		} finally {
+			client.release();
+		}
+	}
+
+	/**
+	 * Gets an email address.
+	 * @param email The email address.
+	 * @returns The email address, or null if not found.
+	 */
+	public static async Get(email: string): Promise<Email | null>
+	{
+		const client = await DotComCore.Connect();
+
+		try {
+			const _HMAC = Email._HMAC(email);
+			const query = await client.query(`SELECT * FROM emails WHERE hash = $1`, [ _HMAC ]);
+
+			if (query.rowCount === 0) {
+				return null;
+			}
+
+			return Email._SQL2Email(query.rows[0]);
+		} catch (e) {
+			throw e;
+		} finally {
+			client.release();
+		}
+	}
+
+	/**
+	 * Verifies if an email address is valid.
+	 * @param email The email address.
+	 * @returns True if the email address is valid, false otherwise.
+	 */
+	public static async VerifyIfValid(email: string): Promise<boolean>
+	{
+		// Check syntax of email
+		email = email.toLowerCase();
+
+		if (email.length > 200 || !Email.regex.test(email)) {
+			return false;
+		}
+
+		const [ user, domain ] = email.split('@');
+
+		// Check if user is not a reserved name
+		if (Email.invalidNames.includes(user)) {
+			return false;
+		}
+
+		// Check if domain is a pre-approved domain (this is to prevent doing DNS lookups for common domains)
+		if (Email.validDomains.includes(domain)) {
+			return true;
+		}
+
+		// Check if domain is not disposable
+		try {
+			for (const line of Email.disposableEmailBlocklist)
+			{
+				if (line === user) return false;
+			}
+		} catch (_) { }
+
+		// If everything is ok, check if domain has MX records
+		const records = await Email.LookupMX(domain);
+
+		if (records.length === 0) {
+			return false;
+		}
+
+		// No problems found, email is valid
+		return true;
+	}
+
+	/**
+	 * Reaches out to the DNS server to get the MX records for a domain.
+	 * @param domain The domain.
+	 * @returns The found MX records.
+	 */
+	public static async LookupMX(domain: string): Promise<MxRecord[]> {
+		try {
+			return await dns.resolveMx(domain);
+		} catch (_) { }
+
+		return [];
+	}
+
+	/**
+	 * Checks if an email address exists.
+	 * @param email The email address.
+	 * @returns True if the email address exists, false otherwise.
+	 */
+	public static async Exists(email: string): Promise<boolean>
+	{
+		const client = await DotComCore.Connect();
+
+		try {
+			const _HMAC = await Email._HMAC(email);
+			const query = await client.query(`SELECT 1 FROM emails WHERE hash = $1`, [ _HMAC ]);
+
+			return query.rowCount > 0;
+		} catch (e) {
+			throw e;
+		} finally {
+			client.release();
+		}
+	}
+
+
+	// #endregion
+
+	// #region Instance methods
+
+
+	/**
+	 * Updates the type of an email address.
+	 * @param type The new type.
+	 */
+	public async SetType(type: Email.Type): Promise<void>
+	{
+		const client = await DotComCore.Connect();
+
+		try {
+			await client.query(`UPDATE emails SET refer = $1 WHERE id = $2`, [ type, this.id ]);
+		} catch (e) {
+			throw e;
+		} finally {
+			client.release();
+		}
+	}
+
+
+	// #endregion
 }
 
 
@@ -221,4 +441,22 @@ export namespace Email
 		'mailer',
 		'reply'
 	];
+
+	export const disposableEmailBlocklist: string[] = [];
 }
+
+(async () =>
+{
+	const emailsText = await RSFiles.Read(
+		path.join(__dirname, '/utils/disposable_email_blocklist.conf')
+	);
+
+	if (process.platform === 'win32') {
+		emailsText.replace('\r\n', '\n');
+	}
+
+	for (const line of emailsText.split('\n'))
+	{
+		Email.disposableEmailBlocklist.push(line);
+	}
+});
