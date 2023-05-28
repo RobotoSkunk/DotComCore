@@ -32,7 +32,14 @@ export interface IEmail
 	type: Email.Type;
 	verified: boolean;
 	createdAt: Date;
+
+	/**
+	 * Indicates if the email address is fake, helps to prevent leak real addresses
+	 * to spammers and other malicious users.
+	 */
 	isFake: boolean;
+
+	// If isFake is true, the email hash will be generated randomly.
 }
 
 /**
@@ -72,17 +79,6 @@ export namespace Email
 		PRIMARY = 0,
 		CONTACT = 1,
 		SECONDARY = 2
-	}
-
-	/**
-	 * List of email types that can be sent.
-	 */
-	export enum MailType {
-		NEW_USER,
-		VERIFY,
-		PASSWORD_RESET_REQUEST,
-		PASSWORD_RESET,
-		ACCOUNT_DELETION
 	}
 
 	/**

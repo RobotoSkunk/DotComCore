@@ -23,9 +23,35 @@
 */
 
 
-class DotComCore {
-	constructor() {
-		console.log('DotComCore constructor');
+import { Database } from "./database";
+
+export interface DotComCoreOptions
+{
+	database: {
+		host: string;
+		database: string;
+		user: string;
+		password: string;
+		port: number;
+	}
+}
+
+class DotComCore
+{
+	private _options: DotComCoreOptions;
+	private readonly _database: Database;
+
+	constructor(options: DotComCoreOptions)
+	{
+		this._options = options;
+
+		this._database = new Database(
+			this._options.database.host,
+			this._options.database.database,
+			this._options.database.user,
+			this._options.database.password,
+			this._options.database.port
+		);
 	}
 }
 
