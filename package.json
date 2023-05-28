@@ -29,11 +29,9 @@
 	"homepage": "https://github.com/RobotoSkunk/dotcom-core#readme",
 	"devDependencies": {
 		"@types/node": "^20.2.5",
-		"@types/nodemailer": "^6.4.8",
 		"@types/pg": "^8.10.1"
 	},
 	"dependencies": {
-		"nodemailer": "^6.9.2",
 		"pg": "^8.11.0"
 	}
 }
