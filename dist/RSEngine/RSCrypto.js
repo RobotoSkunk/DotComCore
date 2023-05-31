@@ -58,6 +58,15 @@ class RSCrypto {
         return result === 0;
     }
     /**
+     * Compares a string with a hashed string.
+     * @param toHash The string in plain text.
+     * @param hashed The already hashed string.
+     * @returns True or false if the strings are equal.
+     */
+    static CompareHash(toHash, hashed) {
+        return RSCrypto.Compare(RSCrypto.Hash(toHash), hashed);
+    }
+    /**
      * Generates a random bytes string encoded in base64 url safe.
      * @param length The length of the random bytes.
      * @returns The random bytes string encoded in base64 url safe.

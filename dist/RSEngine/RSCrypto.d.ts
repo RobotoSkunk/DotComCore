@@ -17,6 +17,13 @@ export declare class RSCrypto {
      */
     static Compare(a: string, b: string): boolean;
     /**
+     * Compares a string with a hashed string.
+     * @param toHash The string in plain text.
+     * @param hashed The already hashed string.
+     * @returns True or false if the strings are equal.
+     */
+    static CompareHash(toHash: string, hashed: string): boolean;
+    /**
      * Generates a random bytes string encoded in base64 url safe.
      * @param length The length of the random bytes.
      * @returns The random bytes string encoded in base64 url safe.
