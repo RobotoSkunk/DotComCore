@@ -37,7 +37,7 @@ export class RSCrypto
 	 * @param data The string to hash.
 	 * @returns The hashed string.
 	 */
-	static Hash(data: string): string
+	public static Hash(data: string): string
 	{
 		return crypto.createHash(this.algo).update(data).digest('hex');
 	}
@@ -48,7 +48,7 @@ export class RSCrypto
 	 * @param b The second string.
 	 * @returns True or false if the strings are equal.
 	 */
-	static Compare(a: string, b: string): boolean
+	public static Compare(a: string, b: string): boolean
 	{
 		if (a.length !== b.length) {
 			return false;
@@ -64,11 +64,22 @@ export class RSCrypto
 	}
 
 	/**
+	 * Compares a string with a hashed string.
+	 * @param toHash The string in plain text.
+	 * @param hashed The already hashed string.
+	 * @returns True or false if the strings are equal.
+	 */
+	public static CompareHash(toHash: string, hashed: string): boolean
+	{
+		return RSCrypto.Compare(RSCrypto.Hash(toHash), hashed);
+	}
+
+	/**
 	 * Generates a random bytes string encoded in base64 url safe.
 	 * @param length The length of the random bytes.
 	 * @returns The random bytes string encoded in base64 url safe.
 	 */
-	static RandomBytes(length: number): string
+	public static RandomBytes(length: number): string
 	{
 		return crypto.randomBytes(length).toString('base64url');
 	}
