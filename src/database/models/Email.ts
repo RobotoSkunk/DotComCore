@@ -110,27 +110,6 @@ export class Email implements IEmail
 		return DotComCore.HMAC(email.toLowerCase() + DotComCore.hmacSalt);
 	}
 
-	/**
-	 * Creates a new email address.
-	 * @param email The email address.
-	 * @param userId The user id.
-	 * @param type The email type.
-	 * @param isFake Indicates if the email address is fake.
-	 * @returns The email id, or null if the email address already exists.
-	 */
-	// private static async _Set(email: string, userId: string, type: Email.Type, isFake: boolean): Promise<string>
-	// {
-	// 	const client = await DotComCore.Connect();
-
-	// 	try {
-
-	// 	} catch (e) {
-	// 		throw e;
-	// 	} finally {
-	// 		client.release();
-	// 	}
-	// }
-
 
 
 	/**

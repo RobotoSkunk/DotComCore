@@ -41,14 +41,6 @@ export declare class Email implements IEmail {
      */
     private static _HMAC;
     /**
-     * Creates a new email address.
-     * @param email The email address.
-     * @param userId The user id.
-     * @param type The email type.
-     * @param isFake Indicates if the email address is fake.
-     * @returns The email id, or null if the email address already exists.
-     */
-    /**
      * Gets an email address by its id.
      * @param id The email id.
      * @returns The email address, or null if not found.
