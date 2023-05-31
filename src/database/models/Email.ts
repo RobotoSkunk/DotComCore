@@ -24,11 +24,10 @@
 
 
 import DotComCore from '../..';
-import path from 'path';
-import { RSFiles } from '../../RSEngine';
 
 import { MxRecord } from 'dns';
 import dns from 'dns/promises';
+import { ConfigLoader } from '../../__internal__/conf';
 
 
 export interface IEmail
@@ -304,159 +303,30 @@ export namespace Email
 	/**
 	 * List of pre-valid domains for email addresses.
 	 */
-	export const validDomains = [
-		'live.com.mx',
-		'gmail.com',
-		'yahoo.com',
-		'hotmail.com',
-		'aol.com',
-		'hotmail.co.uk',
-		'hotmail.fr',
-		'msn.com',
-		'yahoo.fr',
-		'wanadoo.fr',
-		'orange.fr',
-		'comcast.net',
-		'yahoo.co.uk',
-		'yahoo.com.br',
-		'yahoo.co.in',
-		'live.com',
-		'rediffmail.com',
-		'free.fr',
-		'gmx.de',
-		'web.de',
-		'yandex.ru',
-		'ymail.com',
-		'libero.it',
-		'outlook.com',
-		'uol.com.br',
-		'bol.com.br',
-		'mail.ru',
-		'cox.net',
-		'hotmail.it',
-		'sbcglobal.net',
-		'sfr.fr',
-		'live.fr',
-		'verizon.net',
-		'live.co.uk',
-		'googlemail.com',
-		'yahoo.es',
-		'ig.com.br',
-		'live.nl',
-		'bigpond.com',
-		'terra.com.br',
-		'yahoo.it',
-		'neuf.fr',
-		'yahoo.de',
-		'alice.it',
-		'rocketmail.com',
-		'att.net',
-		'laposte.net',
-		'facebook.com',
-		'bellsouth.net',
-		'yahoo.in',
-		'hotmail.es',
-		'charter.net',
-		'yahoo.ca',
-		'yahoo.com.au',
-		'rambler.ru',
-		'hotmail.de',
-		'tiscali.i',
-		'shaw.c',
-		'yahoo.co.j',
-		'sky.co',
-		'earthlink.net',
-		'optonline.net',
-		'freenet.de',
-		't-online.de',
-		'aliceadsl.fr',
-		'virgilio.it',
-		'home.nl',
-		'qq.com',
-		'telenet.be',
-		'me.com',
-		'yahoo.com.ar',
-		'tiscali.co.uk',
-		'yahoo.com.mx',
-		'voila.fr',
-		'gmx.net',
-		'mail.com',
-		'planet.nl',
-		'tin.it',
-		'live.it',
-		'ntlworld.com',
-		'arcor.de',
-		'yahoo.co.id',
-		'frontiernet.net',
-		'hetnet.nl',
-		'live.com.au',
-		'yahoo.com.sg',
-		'zonnet.nl',
-		'club-internet.fr',
-		'juno.com',
-		'optusnet.com.au',
-		'blueyonder.co.uk',
-		'bluewin.ch',
-		'skynet.be',
-		'sympatico.ca',
-		'windstream.net',
-		'mac.com',
-		'centurytel.net',
-		'chello.nl',
-		'live.ca',
-		'aim.com',
-		'bigpond.net.au',
-		'robotoskunk.com',
-		'microsoft.com',
-		'google.com',
-		'goddady.com'
-	];
+	export const validDomains: string[] = [];
 
 	/**
 	 * List of common bot names that are not allowed to register.
 	 */
-	export const invalidNames = [
-		'noreply',
-		'no-reply',
-		'support',
-		'example',
-		'info',
-		'user',
-		'mail',
-		'test',
-		'noreply-dominos',
-		'microsoftstore',
-		'news',
-		'email',
-		'notification',
-		'purchases',
-		'purchase',
-		'notifications',
-		'noreply-purchases',
-		'message',
-		'messages',
-		'no-responder',
-		'dominospizzamx',
-		'friendupdates',
-		'mailer',
-		'reply'
-	];
+	export const invalidNames: string[] = [];
 
+	/**
+	 * List of disposable email domains.
+	 */
 	export const disposableEmailBlocklist: string[] = [];
 }
 
 (async () =>
 {
-	const emailsText = await RSFiles.Read(
-		path.join(__dirname, '/utils/disposable_email_blocklist.conf')
-	);
-
-	if (process.platform === 'win32') {
-		emailsText.replace('\r\n', '\n');
+	for (const domain of await ConfigLoader.Load('common_email_domains_whitelist.conf')) {
+		Email.validDomains.push(domain);
 	}
 
-	for (const line of emailsText.split('\n'))
-	{
-		Email.disposableEmailBlocklist.push(line);
+	for (const name of await ConfigLoader.Load('email_names_blocklist.conf')) {
+		Email.invalidNames.push(name);
+	}
+
+	for (const domain of await ConfigLoader.Load('disposable_email_blocklist.conf')) {
+		Email.disposableEmailBlocklist.push(domain);
 	}
 });

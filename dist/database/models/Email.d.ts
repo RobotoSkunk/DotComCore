@@ -101,5 +101,8 @@ export declare namespace Email {
      * List of common bot names that are not allowed to register.
      */
     const invalidNames: string[];
+    /**
+     * List of disposable email domains.
+     */
     const disposableEmailBlocklist: string[];
 }
