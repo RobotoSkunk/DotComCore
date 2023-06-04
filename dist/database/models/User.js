@@ -84,7 +84,7 @@ class User {
             id: queryData.id,
             hash: queryData.hash,
             name: queryData.username,
-            handler: queryData.handler,
+            handler: queryData._handler,
             birthdate: queryData.birthdate,
             roles: new UserRoles_1.UserRoles(queryData.roles)
         });
@@ -185,7 +185,7 @@ class User {
         const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT id, hash, username, _handler, birthdate, roles
-												FROM users WHERE _handler = $1`, [handler]);
+												FROM users WHERE LOWER(_handler) = LOWER($1)`, [handler]);
             if (query.rowCount === 0) {
                 return null;
             }
@@ -224,7 +224,7 @@ class User {
     static async ExistsByHandler(handler) {
         const client = await Core_1.default.Connect();
         try {
-            const query = await client.query(`SELECT 1 FROM users WHERE _handler = $1`, [handler]);
+            const query = await client.query(`SELECT 1 FROM users WHERE LOWER(_handler) = LOWER($1)`, [handler]);
             return query.rowCount > 0;
         }
         catch (e) {

@@ -111,7 +111,7 @@ export class User implements IUser
 			id: queryData.id,
 			hash: queryData.hash,
 			name: queryData.username,
-			handler: queryData.handler,
+			handler: queryData._handler,
 			birthdate: queryData.birthdate,
 			roles: new UserRoles(queryData.roles)
 		});
@@ -228,7 +228,7 @@ export class User implements IUser
 
 		try {
 			const query = await client.query(`SELECT id, hash, username, _handler, birthdate, roles
-												FROM users WHERE _handler = $1`, [ handler ]);
+												FROM users WHERE LOWER(_handler) = LOWER($1)`, [ handler ]);
 
 			if (query.rowCount === 0) {
 				return null;
@@ -271,7 +271,7 @@ export class User implements IUser
 		const client = await Core.Connect();
 
 		try {
-			const query = await client.query(`SELECT 1 FROM users WHERE _handler = $1`, [ handler ]);
+			const query = await client.query(`SELECT 1 FROM users WHERE LOWER(_handler) = LOWER($1)`, [ handler ]);
 			return query.rowCount > 0;
 		} catch (e) {
 			throw e;
