@@ -86,39 +86,55 @@ export class TokenBase implements ITokenBase {
 	}
 
 	/**
+	 * Gets a token from the database.
+	 * @param token The token to get.
+	 * @returns The token or null if not found.
+	 */
+	public static async GetToken(token: string): Promise<TokenBase>
+	{
+		const [ id, validator ] = TokenBase._SafeSeparator(token);
+
+		if (id === '' || validator === '') {
+			return null;
+		}
+
+		const client = await Core.Connect();
+
+		try {
+			const result = await client.query(`SELECT val_key, created_at, expires_at FROM tokens WHERE id = $1`, [ id ]);
+
+			if (result.rowCount === 0) {
+				return null;
+			}
+
+			const validatorHash = result.rows[0].val_key;
+
+			if (!RSCrypto.CompareHash(validator, validatorHash)) {
+				return null;
+			}
+
+			return new TokenBase(
+				id,
+				result.rows[0].val_key,
+				result.rows[0].created_at,
+				result.rows[0].expires_at
+			);
+		} catch (e) {
+			throw e;
+		} finally {
+			client.release();
+		}
+	}
+
+
+	/**
 	 * Validates if a given token is valid with the database.
 	 * @param token The token to validate.
 	 * @returns True or false if the token is valid.
 	 */
 	public static async ValidateToken(token: string): Promise<boolean>
 	{
-		const [ id, validator ] = TokenBase._SafeSeparator(token);
-
-		if (id === '' || validator === '') {
-			return false;
-		}
-
-		const client = await Core.Connect();
-
-		try {
-			const result = await client.query(`SELECT val_key FROM tokens WHERE id = $1`, [ id ]);
-
-			if (result.rowCount === 0) {
-				return false;
-			}
-
-			const validatorHash = result.rows[0].val_key;
-
-			if (!RSCrypto.CompareHash(validator, validatorHash)) {
-				return false;
-			}
-
-			return true;
-		} catch (e) {
-			throw e;
-		} finally {
-			client.release();
-		}
+		return await TokenBase.GetToken(token) !== null;
 	}
 
 	/**

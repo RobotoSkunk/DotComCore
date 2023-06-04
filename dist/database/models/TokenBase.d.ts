@@ -25,6 +25,12 @@ export declare class TokenBase implements ITokenBase {
      */
     static GenerateToken(): ITokenBase;
     /**
+     * Gets a token from the database.
+     * @param token The token to get.
+     * @returns The token or null if not found.
+     */
+    static GetToken(token: string): Promise<TokenBase>;
+    /**
      * Validates if a given token is valid with the database.
      * @param token The token to validate.
      * @returns True or false if the token is valid.

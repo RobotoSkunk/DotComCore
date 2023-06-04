@@ -71,26 +71,26 @@ class TokenBase {
         };
     }
     /**
-     * Validates if a given token is valid with the database.
-     * @param token The token to validate.
-     * @returns True or false if the token is valid.
+     * Gets a token from the database.
+     * @param token The token to get.
+     * @returns The token or null if not found.
      */
-    static async ValidateToken(token) {
+    static async GetToken(token) {
         const [id, validator] = TokenBase._SafeSeparator(token);
         if (id === '' || validator === '') {
-            return false;
+            return null;
         }
         const client = await Core_1.default.Connect();
         try {
-            const result = await client.query(`SELECT val_key FROM tokens WHERE id = $1`, [id]);
+            const result = await client.query(`SELECT val_key, created_at, expires_at FROM tokens WHERE id = $1`, [id]);
             if (result.rowCount === 0) {
-                return false;
+                return null;
             }
             const validatorHash = result.rows[0].val_key;
             if (!RSEngine_1.RSCrypto.CompareHash(validator, validatorHash)) {
-                return false;
+                return null;
             }
-            return true;
+            return new TokenBase(id, result.rows[0].val_key, result.rows[0].created_at, result.rows[0].expires_at);
         }
         catch (e) {
             throw e;
@@ -98,6 +98,14 @@ class TokenBase {
         finally {
             client.release();
         }
+    }
+    /**
+     * Validates if a given token is valid with the database.
+     * @param token The token to validate.
+     * @returns True or false if the token is valid.
+     */
+    static async ValidateToken(token) {
+        return await TokenBase.GetToken(token) !== null;
     }
     /**
      * Deletes the token from the database.
