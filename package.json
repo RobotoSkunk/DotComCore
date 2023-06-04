@@ -1,5 +1,5 @@
 {
-	"name": "@robotoskunk/dotcomcore",
+	"name": "dotcomcore",
 	"version": "0.1.0",
 	"description": "The main core of robotoskunk.com",
 	"main": "dist/index.js",
