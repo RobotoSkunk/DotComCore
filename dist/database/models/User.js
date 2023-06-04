@@ -276,8 +276,7 @@ class User {
         }
     }
     /**
-     * Returns the user emails.
-     * Note: This method only returns secondary emails if the user has some.
+     * Returns the user secondary emails. If the user has no secondary emails, the primary email will be returned.
      */
     async *GetSecondaryEmails() {
         const client = await Core_1.default.Connect();
@@ -291,6 +290,24 @@ class User {
                 for (const email of query.rows) {
                     yield await Email_1.Email.Get(email.id);
                 }
+            }
+        }
+        catch (e) {
+            throw e;
+        }
+        finally {
+            client.release();
+        }
+    }
+    /**
+     * Returns the user emails.
+     */
+    async *GetEmails() {
+        const client = await Core_1.default.Connect();
+        try {
+            const query = await client.query(`SELECT id FROM emails WHERE usrid = $1 ORDER BY refer ASC`, [this.id]);
+            for (const email of query.rows) {
+                yield await Email_1.Email.Get(email.id);
             }
         }
         catch (e) {

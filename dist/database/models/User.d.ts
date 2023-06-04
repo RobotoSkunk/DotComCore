@@ -97,8 +97,11 @@ export declare class User implements IUser {
      */
     GetPrimaryEmail(): Promise<Email>;
     /**
-     * Returns the user emails.
-     * Note: This method only returns secondary emails if the user has some.
+     * Returns the user secondary emails. If the user has no secondary emails, the primary email will be returned.
      */
     GetSecondaryEmails(): AsyncGenerator<Email>;
+    /**
+     * Returns the user emails.
+     */
+    GetEmails(): AsyncGenerator<Email>;
 }
