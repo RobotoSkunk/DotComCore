@@ -327,7 +327,7 @@ export class User implements IUser
 	 * Returns the user emails.
 	 * Note: This method only returns secondary emails if the user has some.
 	 */
-	public async *GetEmails(): AsyncGenerator<Email>
+	public async *GetSecondaryEmails(): AsyncGenerator<Email>
 	{
 		const client = await DotComCore.Connect();
 

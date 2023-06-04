@@ -100,5 +100,5 @@ export declare class User implements IUser {
      * Returns the user emails.
      * Note: This method only returns secondary emails if the user has some.
      */
-    GetEmails(): AsyncGenerator<Email>;
+    GetSecondaryEmails(): AsyncGenerator<Email>;
 }

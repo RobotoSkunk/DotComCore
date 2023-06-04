@@ -278,7 +278,7 @@ class User {
      * Returns the user emails.
      * Note: This method only returns secondary emails if the user has some.
      */
-    async *GetEmails() {
+    async *GetSecondaryEmails() {
         const client = await __1.default.Connect();
         try {
             const query = await client.query(`SELECT id FROM emails WHERE usrid = $1 AND refer = 2`, [this.id]);
