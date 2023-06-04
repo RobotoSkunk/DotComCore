@@ -30,6 +30,7 @@ exports.Email = void 0;
 const Core_1 = __importDefault(require("../../Core"));
 const promises_1 = __importDefault(require("dns/promises"));
 const conf_1 = require("../../__internal__/conf");
+const RSEngine_1 = require("../../RSEngine");
 /**
  * Represents an email address.
  */
@@ -206,6 +207,14 @@ class Email {
         finally {
             client.release();
         }
+    }
+    /**
+     * Decrypts the email address using the encryption key.
+     * @param encryptionKey The encryption key.
+     * @returns The decrypted email address.
+     */
+    async Read(encryptionKey) {
+        return await RSEngine_1.RSCrypto.Decrypt(this.email, encryptionKey);
     }
 }
 exports.Email = Email;

@@ -75,6 +75,12 @@ export declare class Email implements IEmail {
      * @param type The new type.
      */
     SetType(type: Email.Type): Promise<void>;
+    /**
+     * Decrypts the email address using the encryption key.
+     * @param encryptionKey The encryption key.
+     * @returns The decrypted email address.
+     */
+    Read(encryptionKey: string): Promise<string>;
 }
 export declare namespace Email {
     /**

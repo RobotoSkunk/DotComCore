@@ -28,6 +28,7 @@ import Core from '../../Core';
 import { MxRecord } from 'dns';
 import dns from 'dns/promises';
 import { ConfigLoader } from '../../__internal__/conf';
+import { RSCrypto } from '../../RSEngine';
 
 
 export interface IEmail
@@ -263,6 +264,15 @@ export class Email implements IEmail
 		}
 	}
 
+	/**
+	 * Decrypts the email address using the encryption key.
+	 * @param encryptionKey The encryption key.
+	 * @returns The decrypted email address.
+	 */
+	public async Read(encryptionKey: string): Promise<string>
+	{
+		return await RSCrypto.Decrypt(this.email, encryptionKey);
+	}
 
 	// #endregion
 }
