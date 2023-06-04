@@ -30,4 +30,8 @@ export declare class TokenBase implements ITokenBase {
      * @returns True or false if the token is valid.
      */
     static ValidateToken(token: string): Promise<boolean>;
+    /**
+     * Deletes the token from the database.
+     */
+    Delete(): Promise<void>;
 }

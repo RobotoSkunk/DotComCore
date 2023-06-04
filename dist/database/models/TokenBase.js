@@ -99,6 +99,21 @@ class TokenBase {
             client.release();
         }
     }
+    /**
+     * Deletes the token from the database.
+     */
+    async Delete() {
+        const client = await Core_1.default.Connect();
+        try {
+            await client.query(`DELETE FROM tokens WHERE id = $1`, [this.id]);
+        }
+        catch (e) {
+            throw e;
+        }
+        finally {
+            client.release();
+        }
+    }
 }
 exports.TokenBase = TokenBase;
 //# sourceMappingURL=TokenBase.js.map

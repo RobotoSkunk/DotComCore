@@ -120,4 +120,20 @@ export class TokenBase implements ITokenBase {
 			client.release();
 		}
 	}
+
+	/**
+	 * Deletes the token from the database.
+	 */
+	public async Delete(): Promise<void>
+	{
+		const client = await Core.Connect();
+
+		try {
+			await client.query(`DELETE FROM tokens WHERE id = $1`, [ this.id ]);
+		} catch (e) {
+			throw e;
+		} finally {
+			client.release();
+		}
+	}
 }
