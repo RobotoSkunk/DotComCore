@@ -110,7 +110,7 @@ export class User implements IUser
 		return new User({
 			id: queryData.id,
 			hash: queryData.hash,
-			name: queryData.name,
+			name: queryData.username,
 			handler: queryData.handler,
 			birthdate: queryData.birthdate,
 			roles: new UserRoles(queryData.roles)
@@ -153,6 +153,8 @@ export class User implements IUser
 					await client.query('UPDATE users SET password = $1 WHERE id = $2', [ newPassword, id ]);
 				}
 			}
+
+			return true;
 		} catch (e) {
 			throw e;
 		} finally {
@@ -200,7 +202,7 @@ export class User implements IUser
 		const client = await Core.Connect();
 
 		try {
-			const query = await client.query(`SELECT id, hash, name, handler, birthdate, roles
+			const query = await client.query(`SELECT id, hash, username, _handler, birthdate, roles
 												FROM users WHERE id = $1`, [ id ]);
 
 			if (query.rowCount === 0) {
@@ -225,8 +227,8 @@ export class User implements IUser
 		const client = await Core.Connect();
 
 		try {
-			const query = await client.query(`SELECT id, hash, name, handler, birthdate, roles
-												FROM users WHERE handler = $1`, [ handler ]);
+			const query = await client.query(`SELECT id, hash, username, _handler, birthdate, roles
+												FROM users WHERE _handler = $1`, [ handler ]);
 
 			if (query.rowCount === 0) {
 				return null;
@@ -269,7 +271,7 @@ export class User implements IUser
 		const client = await Core.Connect();
 
 		try {
-			const query = await client.query(`SELECT 1 FROM users WHERE handler = $1`, [ handler ]);
+			const query = await client.query(`SELECT 1 FROM users WHERE _handler = $1`, [ handler ]);
 			return query.rowCount > 0;
 		} catch (e) {
 			throw e;

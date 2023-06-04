@@ -108,7 +108,7 @@ class Email {
     static async Get(email) {
         const client = await Core_1.default.Connect();
         try {
-            const _HMAC = Email._HMAC(email);
+            const _HMAC = await Email._HMAC(email);
             const query = await client.query(`SELECT * FROM emails WHERE hash = $1`, [_HMAC]);
             if (query.rowCount === 0) {
                 return null;
