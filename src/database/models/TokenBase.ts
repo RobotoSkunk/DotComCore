@@ -59,7 +59,7 @@ export class TokenBase implements ITokenBase {
 	 * @param token The token to split.
 	 * @returns A tuple with the id and the validator.
 	 */
-	private static _SafeSeparator(token: string): [ string, string ] {
+	protected static _SafeSeparator(token: string): [ string, string ] {
 		if (!token.includes('.')) {
 			return [ '', '' ];
 		}

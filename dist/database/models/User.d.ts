@@ -31,7 +31,7 @@ export declare class User implements IUser {
      * @param hash The user hash.
      * @returns The crypto key.
      */
-    private static GenerateCryptoKey;
+    protected static GenerateCryptoKey(hash: string): Promise<string>;
     /**
      * Returns the crypto key for the user.
      * @returns The crypto key.
@@ -42,14 +42,14 @@ export declare class User implements IUser {
      * @param queryData The SQL query result.
      * @returns	The email address.
      */
-    private static _SQL2User;
+    protected static _SQL2User(queryData: any): User;
     /**
      * Checks if the password is correct.
      * @param password The password to check.
      * @param id The user ID.
      * @returns True if the password is correct, otherwise false.
      */
-    private static _CheckPassword;
+    protected static _CheckPassword(password: string, id: string): Promise<boolean>;
     /**
      * Authenticate the user by email and password.
      * @param email The email address of the user.

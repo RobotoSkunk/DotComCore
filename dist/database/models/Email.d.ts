@@ -33,13 +33,13 @@ export declare class Email implements IEmail {
      * @param queryData The SQL query result.
      * @returns	The email address.
      */
-    private static _SQL2Email;
+    protected static _SQL2Email(queryData: any): Email;
     /**
      * Hashes an email address using _HMAC.
      * @param email The email address.
      * @returns The hashed email address.
      */
-    private static _HMAC;
+    protected static _HMAC(email: string): Promise<string>;
     /**
      * Gets an email address by its id.
      * @param id The email id.

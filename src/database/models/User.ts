@@ -86,7 +86,7 @@ export class User implements IUser
 	 * @param hash The user hash.
 	 * @returns The crypto key.
 	 */
-	private static async GenerateCryptoKey(hash: string): Promise<string>
+	protected static async GenerateCryptoKey(hash: string): Promise<string>
 	{
 		return await RSCrypto.PBKDF2(Core.encryptionKey, hash, 1000, 32);
 	}
@@ -105,7 +105,7 @@ export class User implements IUser
 	 * @param queryData The SQL query result.
 	 * @returns	The email address.
 	 */
-	private static _SQL2User(queryData: any): User
+	protected static _SQL2User(queryData: any): User
 	{
 		return new User({
 			id: queryData.id,
@@ -123,7 +123,7 @@ export class User implements IUser
 	 * @param id The user ID.
 	 * @returns True if the password is correct, otherwise false.
 	 */
-	private static async _CheckPassword(password: string, id: string): Promise<boolean>
+	protected static async _CheckPassword(password: string, id: string): Promise<boolean>
 	{
 		const client = await Core.Connect();
 

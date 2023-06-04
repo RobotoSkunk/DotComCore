@@ -86,7 +86,7 @@ export class Email implements IEmail
 	 * @param queryData The SQL query result.
 	 * @returns	The email address.
 	 */
-	private static _SQL2Email(queryData: any): Email
+	protected static _SQL2Email(queryData: any): Email
 	{
 		return new Email({
 			id: queryData.id,
@@ -105,7 +105,7 @@ export class Email implements IEmail
 	 * @param email The email address.
 	 * @returns The hashed email address.
 	 */
-	private static async _HMAC(email: string): Promise<string>
+	protected static async _HMAC(email: string): Promise<string>
 	{
 		return Core.HMAC(email.toLowerCase() + Core.hmacSalt);
 	}

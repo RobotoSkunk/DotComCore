@@ -19,7 +19,7 @@ export declare class TokenBase implements ITokenBase {
      * @param token The token to split.
      * @returns A tuple with the id and the validator.
      */
-    private static _SafeSeparator;
+    protected static _SafeSeparator(token: string): [string, string];
     /**
      * Generates a new token.
      */
