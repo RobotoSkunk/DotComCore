@@ -1,6 +1,6 @@
 {
 	"name": "dotcomcore",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "The main core of robotoskunk.com",
 	"main": "dist/index.js",
 	"scripts": {

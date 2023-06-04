@@ -11,11 +11,11 @@ It is used to manage the entire website, along with the database and the API.
 This core is treated as a Node.js package, so you can install it using `npm` or `yarn`.
 
 ```bash
-npm install @robotoskunk/dotcomcore
+npm install dotcomcore
 ```
 
 ```bash
-yarn add @robotoskunk/dotcomcore
+yarn add dotcomcore
 ```
 
 ## License
