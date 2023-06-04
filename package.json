@@ -1,5 +1,5 @@
 {
-	"name": "dotcom-core",
+	"name": "@robotoskunk/dotcomcore",
 	"version": "0.1.0",
 	"description": "The main core of robotoskunk.com",
 	"main": "dist/index.js",
@@ -8,7 +8,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/RobotoSkunk/dotcom-core.git"
+		"url": "git+https://github.com/RobotoSkunk/DotComCore.git"
 	},
 	"keywords": [
 		"website-core",
@@ -24,9 +24,9 @@
 	"author": "RobotoSkunk",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/RobotoSkunk/dotcom-core/issues"
+		"url": "https://github.com/RobotoSkunk/DotComCore/issues"
 	},
-	"homepage": "https://github.com/RobotoSkunk/dotcom-core#readme",
+	"homepage": "https://github.com/RobotoSkunk/DotComCore",
 	"devDependencies": {
 		"@types/argon2": "^0.15.0",
 		"@types/bcrypt": "^5.0.0",
