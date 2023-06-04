@@ -30,7 +30,7 @@ export class Database
 	private _connectionPool: PostgreSQL.Pool;
 
 
-	constructor(host: string, database: string, user: string, password: string, port: number)
+	constructor(host: string, database: string, user: string, password: string, port?: number)
 	{
 		this._connectionPool = new PostgreSQL.Pool({
 			host: host,

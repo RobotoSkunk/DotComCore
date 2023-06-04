@@ -23,7 +23,7 @@
 */
 
 
-import DotComCore from '../..';
+import Core from '../../Core';
 import { RSCrypto } from '../../RSEngine';
 import { Email } from './Email';
 import { UserRoles } from './utils/UserRoles';
@@ -88,7 +88,7 @@ export class User implements IUser
 	 */
 	private static async GenerateCryptoKey(hash: string): Promise<string>
 	{
-		return await RSCrypto.PBKDF2(DotComCore.encryptionKey, hash, 1000, 32);
+		return await RSCrypto.PBKDF2(Core.encryptionKey, hash, 1000, 32);
 	}
 
 	/**
@@ -125,7 +125,7 @@ export class User implements IUser
 	 */
 	private static async _CheckPassword(password: string, id: string): Promise<boolean>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const query = await client.query(`SELECT password FROM users WHERE id = $1`, [ id ]);
@@ -168,7 +168,7 @@ export class User implements IUser
 	 */
 	public static async Authenticate(email: string, password: string): Promise<User | null>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const emailObj = await Email.Get(email);
@@ -197,7 +197,7 @@ export class User implements IUser
 	 */
 	public static async GetById(id: string): Promise<User | null>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const query = await client.query(`SELECT id, hash, name, handler, birthdate, roles
@@ -222,7 +222,7 @@ export class User implements IUser
 	 */
 	public static async GetByHandler(handler: string): Promise<User | null>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const query = await client.query(`SELECT id, hash, name, handler, birthdate, roles
@@ -247,7 +247,7 @@ export class User implements IUser
 	 */
 	public static async Exists(id: string): Promise<boolean>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const query = await client.query(`SELECT 1 FROM users WHERE id = $1`, [ id ]);
@@ -266,7 +266,7 @@ export class User implements IUser
 	 */
 	public static async ExistsByHandler(handler: string): Promise<boolean>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const query = await client.query(`SELECT 1 FROM users WHERE handler = $1`, [ handler ]);
@@ -294,7 +294,7 @@ export class User implements IUser
 	 */
 	public async Uses2FA(): Promise<boolean>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const query = await client.query(`SELECT totp_enabled FROM users WHERE id = $1`, [ this.id ]);
@@ -311,7 +311,7 @@ export class User implements IUser
 	 */
 	public async GetPrimaryEmail(): Promise<Email>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const query = await client.query(`SELECT id FROM emails WHERE usrid = $1 AND refer = 0`, [ this.id ]);
@@ -329,7 +329,7 @@ export class User implements IUser
 	 */
 	public async *GetSecondaryEmails(): AsyncGenerator<Email>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const query = await client.query(`SELECT id FROM emails WHERE usrid = $1 AND refer = 2`, [ this.id ]);

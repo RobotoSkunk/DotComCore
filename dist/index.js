@@ -22,31 +22,16 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("./database");
-const RSEngine_1 = require("./RSEngine");
-class DotComCore {
-    static _options;
-    static _database;
-    static Config(options) {
-        this._options = options;
-        this._database = new database_1.Database(this._options.database.host, this._options.database.database, this._options.database.user, this._options.database.password, this._options.database.port);
-    }
-    static get hmacSecret() {
-        return this._options.hmacSecret;
-    }
-    static get hmacSalt() {
-        return this._options.hmacSalt;
-    }
-    static get encryptionKey() {
-        return this._options.encryptionKey;
-    }
-    static async Connect() {
-        return await this._database.Connect();
-    }
-    static async HMAC(data) {
-        return RSEngine_1.RSCrypto.HMAC(data, DotComCore.hmacSecret);
-    }
-}
-exports.default = DotComCore;
+const Core_1 = __importDefault(require("./Core"));
+exports.default = {
+    Core: Core_1.default,
+    User: database_1.User,
+    Email: database_1.Email,
+    TokenBase: database_1.TokenBase
+};
 //# sourceMappingURL=index.js.map

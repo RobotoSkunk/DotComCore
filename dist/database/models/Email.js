@@ -27,7 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Email = void 0;
-const __1 = __importDefault(require("../.."));
+const Core_1 = __importDefault(require("../../Core"));
 const promises_1 = __importDefault(require("dns/promises"));
 const conf_1 = require("../../__internal__/conf");
 /**
@@ -77,7 +77,7 @@ class Email {
      * @returns The hashed email address.
      */
     static async _HMAC(email) {
-        return __1.default.HMAC(email.toLowerCase() + __1.default.hmacSalt);
+        return Core_1.default.HMAC(email.toLowerCase() + Core_1.default.hmacSalt);
     }
     /**
      * Gets an email address by its id.
@@ -85,7 +85,7 @@ class Email {
      * @returns The email address, or null if not found.
      */
     static async GetById(id) {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT * FROM emails WHERE id = $1`, [id]);
             if (query.rowCount === 0) {
@@ -106,7 +106,7 @@ class Email {
      * @returns The email address, or null if not found.
      */
     static async Get(email) {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const _HMAC = Email._HMAC(email);
             const query = await client.query(`SELECT * FROM emails WHERE hash = $1`, [_HMAC]);
@@ -176,7 +176,7 @@ class Email {
      * @returns True if the email address exists, false otherwise.
      */
     static async Exists(email) {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const _HMAC = await Email._HMAC(email);
             const query = await client.query(`SELECT 1 FROM emails WHERE hash = $1`, [_HMAC]);
@@ -196,7 +196,7 @@ class Email {
      * @param type The new type.
      */
     async SetType(type) {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             await client.query(`UPDATE emails SET refer = $1 WHERE id = $2`, [type, this.id]);
         }

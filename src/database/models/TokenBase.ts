@@ -23,7 +23,7 @@
 */
 
 
-import DotComCore from '../..';
+import Core from '../../Core';
 import { RSCrypto } from '../../RSEngine';
 import crypto from 'crypto';
 
@@ -98,7 +98,7 @@ export class TokenBase implements ITokenBase {
 			return false;
 		}
 
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const result = await client.query(`SELECT val_key FROM tokens WHERE id = $1`, [ id ]);

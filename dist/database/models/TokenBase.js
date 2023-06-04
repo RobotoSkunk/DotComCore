@@ -27,7 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TokenBase = void 0;
-const __1 = __importDefault(require("../.."));
+const Core_1 = __importDefault(require("../../Core"));
 const RSEngine_1 = require("../../RSEngine");
 const crypto_1 = __importDefault(require("crypto"));
 /**
@@ -80,7 +80,7 @@ class TokenBase {
         if (id === '' || validator === '') {
             return false;
         }
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const result = await client.query(`SELECT val_key FROM tokens WHERE id = $1`, [id]);
             if (result.rowCount === 0) {

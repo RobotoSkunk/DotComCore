@@ -23,7 +23,7 @@
 */
 
 
-import DotComCore from '../..';
+import Core from '../../Core';
 
 import { MxRecord } from 'dns';
 import dns from 'dns/promises';
@@ -107,7 +107,7 @@ export class Email implements IEmail
 	 */
 	private static async _HMAC(email: string): Promise<string>
 	{
-		return DotComCore.HMAC(email.toLowerCase() + DotComCore.hmacSalt);
+		return Core.HMAC(email.toLowerCase() + Core.hmacSalt);
 	}
 
 
@@ -119,7 +119,7 @@ export class Email implements IEmail
 	 */
 	public static async GetById(id: string): Promise<Email | null>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const query = await client.query(`SELECT * FROM emails WHERE id = $1`, [ id ]);
@@ -143,7 +143,7 @@ export class Email implements IEmail
 	 */
 	public static async Get(email: string): Promise<Email | null>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const _HMAC = Email._HMAC(email);
@@ -226,7 +226,7 @@ export class Email implements IEmail
 	 */
 	public static async Exists(email: string): Promise<boolean>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			const _HMAC = await Email._HMAC(email);
@@ -252,7 +252,7 @@ export class Email implements IEmail
 	 */
 	public async SetType(type: Email.Type): Promise<void>
 	{
-		const client = await DotComCore.Connect();
+		const client = await Core.Connect();
 
 		try {
 			await client.query(`UPDATE emails SET refer = $1 WHERE id = $2`, [ type, this.id ]);

@@ -23,67 +23,12 @@
 */
 
 
-import { PoolClient } from "pg";
-import { Database } from "./database";
-import { RSCrypto } from "./RSEngine";
+import { User, Email, TokenBase } from "./database";
+import Core from "./Core";
 
-export interface DotComCoreOptions
-{
-	database: {
-		host: string;
-		database: string;
-		user: string;
-		password: string;
-		port: number;
-	};
-	hmacSecret: string;
-	hmacSalt: string;
-	encryptionKey: string;
-}
-
-class DotComCore
-{
-	private static _options: DotComCoreOptions;
-	private static _database: Database;
-
-	public static Config(options: DotComCoreOptions)
-	{
-		this._options = options;
-
-		this._database = new Database(
-			this._options.database.host,
-			this._options.database.database,
-			this._options.database.user,
-			this._options.database.password,
-			this._options.database.port
-		);
-	}
-
-	public static get hmacSecret(): string
-	{
-		return this._options.hmacSecret;
-	}
-
-	public static get hmacSalt(): string
-	{
-		return this._options.hmacSalt;
-	}
-
-	public static get encryptionKey(): string
-	{
-		return this._options.encryptionKey;
-	}
-
-	public static async Connect(): Promise<PoolClient>
-	{
-		return await this._database.Connect();
-	}
-
-	public static async HMAC(data: string): Promise<string>
-	{
-		return RSCrypto.HMAC(data, DotComCore.hmacSecret);
-	}
-}
-
-
-export default DotComCore;
+export default {
+	Core,
+	User,
+	Email,
+	TokenBase
+};

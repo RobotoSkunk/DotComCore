@@ -27,7 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
-const __1 = __importDefault(require("../.."));
+const Core_1 = __importDefault(require("../../Core"));
 const RSEngine_1 = require("../../RSEngine");
 const Email_1 = require("./Email");
 const UserRoles_1 = require("./utils/UserRoles");
@@ -65,7 +65,7 @@ class User {
      * @returns The crypto key.
      */
     static async GenerateCryptoKey(hash) {
-        return await RSEngine_1.RSCrypto.PBKDF2(__1.default.encryptionKey, hash, 1000, 32);
+        return await RSEngine_1.RSCrypto.PBKDF2(Core_1.default.encryptionKey, hash, 1000, 32);
     }
     /**
      * Returns the crypto key for the user.
@@ -96,7 +96,7 @@ class User {
      * @returns True if the password is correct, otherwise false.
      */
     static async _CheckPassword(password, id) {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT password FROM users WHERE id = $1`, [id]);
             const passwordHash = query.rows[0].password;
@@ -134,7 +134,7 @@ class User {
      * @returns The user object if the authentication was successful, otherwise null.
      */
     static async Authenticate(email, password) {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const emailObj = await Email_1.Email.Get(email);
             if (!emailObj || emailObj.type !== Email_1.Email.Type.PRIMARY) {
@@ -159,7 +159,7 @@ class User {
      * @returns The user object if found, otherwise null.
      */
     static async GetById(id) {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT id, hash, name, handler, birthdate, roles
 												FROM users WHERE id = $1`, [id]);
@@ -181,7 +181,7 @@ class User {
      * @returns The user object if found, otherwise null.
      */
     static async GetByHandler(handler) {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT id, hash, name, handler, birthdate, roles
 												FROM users WHERE handler = $1`, [handler]);
@@ -203,7 +203,7 @@ class User {
      * @returns True if the user exists, otherwise false.
      */
     static async Exists(id) {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT 1 FROM users WHERE id = $1`, [id]);
             return query.rowCount > 0;
@@ -221,7 +221,7 @@ class User {
      * @returns True if the user exists, otherwise false.
      */
     static async ExistsByHandler(handler) {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT 1 FROM users WHERE handler = $1`, [handler]);
             return query.rowCount > 0;
@@ -246,7 +246,7 @@ class User {
      * @returns True if the user has 2FA enabled, otherwise false.
      */
     async Uses2FA() {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT totp_enabled FROM users WHERE id = $1`, [this.id]);
             return query.rows[0].totp_enabled;
@@ -262,7 +262,7 @@ class User {
      * Returns the user primary email.
      */
     async GetPrimaryEmail() {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT id FROM emails WHERE usrid = $1 AND refer = 0`, [this.id]);
             return await Email_1.Email.Get(query.rows[0].id);
@@ -279,7 +279,7 @@ class User {
      * Note: This method only returns secondary emails if the user has some.
      */
     async *GetSecondaryEmails() {
-        const client = await __1.default.Connect();
+        const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT id FROM emails WHERE usrid = $1 AND refer = 2`, [this.id]);
             if (query.rowCount === 0) {
