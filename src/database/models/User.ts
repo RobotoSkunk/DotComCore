@@ -317,7 +317,7 @@ export class User implements IUser
 
 		try {
 			const query = await client.query(`SELECT id FROM emails WHERE usrid = $1 AND refer = 0`, [ this.id ]);
-			return await Email.Get(query.rows[0].id);
+			return await Email.GetById(query.rows[0].id);
 		} catch (e) {
 			throw e;
 		} finally {
@@ -341,7 +341,7 @@ export class User implements IUser
 				return yield primaryEmail;
 			} else {
 				for (const email of query.rows) {
-					yield await Email.Get(email.id);
+					yield await Email.GetById(email.id);
 				}
 			}
 		} catch (e) {
@@ -362,7 +362,7 @@ export class User implements IUser
 			const query = await client.query(`SELECT id FROM emails WHERE usrid = $1 ORDER BY refer ASC`, [ this.id ]);
 
 			for (const email of query.rows) {
-				yield await Email.Get(email.id);
+				yield await Email.GetById(email.id);
 			}
 		} catch (e) {
 			throw e;

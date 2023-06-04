@@ -266,7 +266,7 @@ class User {
         const client = await Core_1.default.Connect();
         try {
             const query = await client.query(`SELECT id FROM emails WHERE usrid = $1 AND refer = 0`, [this.id]);
-            return await Email_1.Email.Get(query.rows[0].id);
+            return await Email_1.Email.GetById(query.rows[0].id);
         }
         catch (e) {
             throw e;
@@ -288,7 +288,7 @@ class User {
             }
             else {
                 for (const email of query.rows) {
-                    yield await Email_1.Email.Get(email.id);
+                    yield await Email_1.Email.GetById(email.id);
                 }
             }
         }
@@ -307,7 +307,7 @@ class User {
         try {
             const query = await client.query(`SELECT id FROM emails WHERE usrid = $1 ORDER BY refer ASC`, [this.id]);
             for (const email of query.rows) {
-                yield await Email_1.Email.Get(email.id);
+                yield await Email_1.Email.GetById(email.id);
             }
         }
         catch (e) {
